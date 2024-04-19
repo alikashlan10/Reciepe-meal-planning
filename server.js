@@ -16,7 +16,7 @@ app.use((req, res, next) => {
   next()
 })
 
-
+// user routes
 app.use('/api/user', userRoutes)
 
 // connect to db
