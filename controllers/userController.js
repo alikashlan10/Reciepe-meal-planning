@@ -112,6 +112,68 @@ const userLogin = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+const followUser = async (req, res) => {
+    const { followId } = req.params; // ID of the user to follow
+    const userId = req.user.id; // ID of the user making the request
+
+    try {
+        if (followId === userId) {
+            return res.status(400).json({ error: "Users can't follow themselves." });
+        }
+
+        const user = await UserModel.findById(userId);
+        const userToFollow = await UserModel.findById(followId);
+
+        if (!userToFollow) {
+            return res.status(404).json({ error: 'User to follow not found.' });
+        }
+
+        if (user.following.includes(followId)) {
+            return res.status(400).json({ error: 'You are already following this user.' });
+        }
+
+        // Add to the follower and following arrays
+        user.following.push(followId);
+        userToFollow.followers.push(userId);
+
+        await user.save();
+        await userToFollow.save();
+
+        res.status(200).json({ message: 'User followed successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Unfollow a user
+const unfollowUser = async (req, res) => {
+    const { unfollowId } = req.params; // ID of the user to unfollow
+    const userId = req.user.id; // ID of the user making the request
+
+    try {
+        const user = await UserModel.findById(userId);
+        const userToUnfollow = await UserModel.findById(unfollowId);
+
+        if (!userToUnfollow) {
+            return res.status(404).json({ error: 'User to unfollow not found.' });
+        }
+
+        if (!user.following.includes(unfollowId)) {
+            return res.status(400).json({ error: 'You are not following this user.' });
+        }
+
+        // Remove from the follower and following arrays
+        user.following = user.following.filter(id => id.toString() !== unfollowId);
+        userToUnfollow.followers = userToUnfollow.followers.filter(id => id.toString() !== userId);
+
+        await user.save();
+        await userToUnfollow.save();
+
+        res.status(200).json({ message: 'User unfollowed successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
 
 module.exports = {
     userRegister, // Existing function
@@ -119,7 +181,7 @@ module.exports = {
     getUser,      // Existing function
     updateUser,
     deleteUser,
-    userLogin
+    userLogin,
+    followUser,
+    unfollowUser
 };
-
-

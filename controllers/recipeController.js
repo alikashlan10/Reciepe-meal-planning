@@ -1,98 +1,159 @@
-const Recipe = require('../dataModels/recipeModel');
+const RecipeModel = require('../dataModels/recipeModel');
+const UserModel = require('../dataModels/userModel');
+const mongoose = require('mongoose');
 
-// Logic to list all recipes
-exports.listRecipes = async (req, res) => {
-  try {
-    const recipes = await Recipe.find().populate('user', 'username');
-    res.status(200).json(recipes);
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving recipes', error: error.message });
-  }
-};
+// Post a new recipe
+const postRecipe = async (req, res) => {
+    try {
+        const { title, ingredients, steps } = req.body;
+        const user = await UserModel.findById(req.user.id); // Assuming user ID is in the request
 
-// Logic to create a recipe
-exports.createRecipe = async (req, res) => {
-  try {
-    const { title, ingredients, cookingInstructions, photos, nutritionalFacts } = req.body;
-    // Ensure that user data is included in the req.body or extracted from a session/authorization token
-    const user = req.user;
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
 
-    const recipe = new Recipe({
-      title,
-      ingredients,
-      cookingInstructions,
-      photos,
-      nutritionalFacts,
-      user: user._id // Assuming the user model's _id is stored in the session or token
-    });
+        const newRecipe = new RecipeModel({
+            title,
+            user: req.user.id,
+            ingredients,
+            steps
+        });
 
-    await recipe.save();
-    res.status(201).json(recipe);
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating recipe', error: error.message });
-  }
-};
+        const savedRecipe = await newRecipe.save();
 
-// Logic to get a single recipe
-exports.getRecipe = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const recipe = await Recipe.findById(id).populate('user', 'username');
-    if (!recipe) {
-      return res.status(404).json({ message: 'Recipe not found' });
+        // Add the recipe to the user's postedRecipes
+        user.postedRecipes.push(savedRecipe);
+        await user.save();
+
+        res.status(201).json({ message: 'Recipe created!', recipe: savedRecipe });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    res.status(200).json(recipe);
-  } catch (error) {
-    res.status(500).json({ message: 'Error retrieving recipe', error: error.message });
-  }
 };
 
-// Logic to like a recipe
-exports.likeRecipe = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id; // Extract this from the session or token
-
-    const recipe = await Recipe.findById(id);
-    if (!recipe) {
-      return res.status(404).json({ message: 'Recipe not found' });
+// Get all recipes
+const getAllRecipes = async (req, res) => {
+    try {
+        const recipes = await RecipeModel.find().populate('user', 'username');
+        res.status(200).json(recipes);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    // Check if the user has already liked the recipe to prevent duplicate likes
-    if (recipe.likes.includes(userId)) {
-      return res.status(400).json({ message: 'You have already liked this recipe' });
-    }
-
-    recipe.likes.push(userId);
-    await recipe.save();
-    res.status(200).json({ message: 'Recipe liked successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error liking recipe', error: error.message });
-  }
 };
 
-// Logic to comment on a recipe
-exports.commentOnRecipe = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { text } = req.body; // 'text' should be the comment text
-    const userId = req.user._id; // Extract this from the session or token
-
-    const recipe = await Recipe.findById(id);
-    if (!recipe) {
-      return res.status(404).json({ message: 'Recipe not found' });
+// Search for recipes
+const searchRecipes = async (req, res) => {
+    const { query } = req.query;
+    try {
+        const recipes = await RecipeModel.find({
+            title: { $regex: query, $options: 'i' } // Case-insensitive search
+        }).populate('user', 'username');
+        res.status(200).json(recipes);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-
-    const comment = {
-      text,
-      user: userId,
-      createdAt: new Date() // Or let Mongoose handle it if timestamps are set in the schema
-    };
-
-    recipe.comments.push(comment);
-    await recipe.save();
-    res.status(201).json({ message: 'Comment added successfully', comment });
-  } catch (error) {
-    res.status(500).json({ message: 'Error commenting on recipe', error: error.message });
-  }
 };
+
+
+// Get a specific recipe by ID
+const getRecipeById = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findById(req.params.id).populate('user', 'username');
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found.' });
+        }
+        res.status(200).json(recipe);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Update a recipe
+const updateRecipe = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findOneAndUpdate(
+            { _id: req.params.id, user: req.user.id },
+            req.body,
+            { new: true }
+        );
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found or user not authorized to update this recipe.' });
+        }
+        res.status(200).json(recipe);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Delete a recipe
+const deleteRecipe = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found or user not authorized to delete this recipe.' });
+        }
+        res.status(200).json({ message: 'Recipe deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Like a recipe
+const likeRecipe = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findById(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found.' });
+        }
+
+        // Check if the user has already liked the recipe
+        if (recipe.likes.includes(req.user.id)) {
+            return res.status(400).json({ message: 'User has already liked this recipe.' });
+        }
+
+        // If not, add user's like
+        recipe.likes.push(req.user.id);
+        await recipe.save();
+
+        res.status(200).json({ message: 'Recipe liked successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Comment on a recipe
+const commentOnRecipe = async (req, res) => {
+    const { text } = req.body;
+    try {
+        const recipe = await RecipeModel.findById(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found.' });
+        }
+        
+        const comment = {
+            text,
+            user: req.user.id,
+            date: new Date()
+        };
+
+        // Add the comment to the recipe
+        recipe.comments.push(comment);
+        await recipe.save();
+
+        res.status(201).json({ message: 'Comment added successfully.', comment });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = {
+    postRecipe,
+    getAllRecipes,
+    getRecipeById,
+    searchRecipes,
+    updateRecipe,
+    deleteRecipe,
+    likeRecipe,
+    commentOnRecipe
+};
+
