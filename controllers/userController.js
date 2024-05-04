@@ -38,6 +38,7 @@ const getAllUsers = async (req, res) => {
 // Get a specific user
 const getUser = async (req,res)=>{
 
+    
     const {username} = req.params
     try{
         //search for user
@@ -56,7 +57,7 @@ const getUser = async (req,res)=>{
 
 // Update a user's details
 const updateUser = async (req, res) => {
-    const { userId } = req.params;
+    const { username } = req.params;
     const updates = req.body;
 
     if (updates.password) {
@@ -64,7 +65,7 @@ const updateUser = async (req, res) => {
     }
 
     try {
-        const user = await userModel.findByIdAndUpdate(userId, updates, { new: true });
+        const user = await userModel.findOneAndUpdate({username}, updates, { new: true });
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
@@ -114,7 +115,7 @@ const userLogin = async (req, res) => {
 };
 const followUser = async (req, res) => {
     const { followId } = req.params; // ID of the user to follow
-    const userId = req.user.id; // ID of the user making the request
+    const userId = req.userId; // ID of the user making the request
 
     try {
         if (followId === userId) {
