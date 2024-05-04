@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Switch, BrowserRouter, Routes } from 'react-router-dom';
 //import pages & comoponents
-
+import RegisterPage from './pages/Register';
 import LoginPage from './pages/login';
 function App() {
   return (
@@ -9,8 +9,8 @@ function App() {
         <div className="pages">
           <Routes>
             <Route
-            path="/"
-            element={ <LoginPage />}
+              path="/"
+              element={ <RegisterPage />}
 
             />
           </Routes>
