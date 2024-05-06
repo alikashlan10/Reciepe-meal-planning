@@ -4,6 +4,8 @@ import RegisterPage from './pages/Register';
 import LoginPage from './pages/login';
 import Navbar from './components/NavBar';
 import Home from './pages/Home';
+import AddRecipePage from './pages/AddRecipePage';
+
 function App() {
   return (
     <div className="App">
@@ -22,6 +24,10 @@ function App() {
             <Route
             path='/home'
             element={<Home/>}
+            />
+            <Route
+            path='/form'
+            element={<AddRecipePage/>}
             />
           </Routes>
 

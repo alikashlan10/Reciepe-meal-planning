@@ -10,6 +10,11 @@ const {
   likeRecipe,
   commentOnRecipe
 } = require('../controllers/recipeController');
+const requireAuth = require('../middleware/requireAuth')
+const authenticateToken = require('../middleware/requireAuth')
+
+//authentcation middleware
+router.use(authenticateToken)
 
 // Create a new recipe
 router.post('/', postRecipe);

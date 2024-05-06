@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import RecipeDetails from '../components/RecipeDetails';
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Home = () => {
     const [recipes, setRecipes] = useState(null);
 
+    const {user} = useAuthContext()
+
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await fetch('http://localhost:4000/api/recipes');
+                const response = await fetch('http://localhost:4000/api/recipes', {
+                    headers: {'Authorization': `Bearer ${user.token}`},
+                  })
                 if (response.ok) {
                     const data = await response.json();
                     setRecipes(data);
@@ -19,7 +24,9 @@ const Home = () => {
             }
         };
 
-        fetchRecipes();
+        if(user){
+            fetchRecipes();
+        }
     }, []);
 
     return (

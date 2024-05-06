@@ -14,7 +14,7 @@ const postRecipe = async (req, res) => {
 
         const newRecipe = new RecipeModel({
             title,
-            user: user.username,
+            user: user.id,
             ingredients,
             steps
         });
