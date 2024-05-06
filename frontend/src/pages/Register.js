@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useSignup } from '../hooks/useSignup';
 
-function RegisterPage() {
+const RegisterPage = ()=> {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
+    const {signup,isLoading,error}= useSignup();
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -21,26 +21,11 @@ function RegisterPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError('');
-        setMessage('');
+        //setError('');
+        //setMessage('');
 
-        try {
-            const response = await fetch('http://localhost:4000/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, email, password }),
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to register');
-            }
-            setMessage('Registration successful!');
-            // Optionally redirect user to login page or automatically log them in
-        } catch (error) {
-            setError(error.message);
-        }
+        await signup(username,email,password)
+
     };
 
     return (
@@ -48,7 +33,6 @@ function RegisterPage() {
             <form onSubmit={handleSubmit}>
                 <h2>Register</h2>
                 {error && <div className="error">{error}</div>}
-                {message && <div className="message">{message}</div>}
                 <div>
                     <label htmlFor="username">Username:</label>
                     <input
@@ -79,7 +63,7 @@ function RegisterPage() {
                         required
                     />
                 </div>
-                <button type="submit">Register</button>
+                <button type="submit" disabled={isLoading}>Register</button>
             </form>
         </div>
     );

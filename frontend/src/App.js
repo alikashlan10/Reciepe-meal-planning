@@ -13,9 +13,13 @@ function App() {
               element={ <RegisterPage />}
 
             />
+            <Route
+            path='login'
+            element={<LoginPage/>}
+            />
           </Routes>
 
-
+          
         </div>
       </BrowserRouter>
     </div>

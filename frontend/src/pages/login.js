@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { useLogin } from '../hooks/useLogin';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
+    const {login,error,isLoading} = useLogin()
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -16,28 +16,9 @@ function LoginPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError('');
-        setMessage('');
 
-        try {
-            const response = await fetch('http://localhost:4000/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || 'Unknown error');
-            }
-            localStorage.setItem('token', data.token); 
-            setMessage('Login successful!');
-            // You might want to save the token to localStorage and redirect the user
-            console.log(data.token); // Logging the token, should be stored securely
-        } catch (error) {
-            setError(error.message);
-        }
+        await login(email,password)
+
     };
 
     return (
@@ -45,7 +26,6 @@ function LoginPage() {
             <form onSubmit={handleSubmit}>
                 <h2>Login</h2>
                 {error && <div className="error">{error}</div>}
-                {message && <div className="message">{message}</div>}
                 <div>
                     <label htmlFor="email">Email:</label>
                     <input
@@ -66,7 +46,7 @@ function LoginPage() {
                         required
                     />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit" disabled={isLoading}>Login</button>
                 
             </form>
         </div>
