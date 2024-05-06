@@ -4,7 +4,7 @@ const RecipeDetails = ({ recipe }) => {
   return (
     <div className="recipe">
       <h2>{recipe.title}</h2>
-      <p>Author: {recipe.author}</p>
+      <p>Author: {recipe.user.username}</p>
       <h3>Ingredients:</h3>
       <ul>
         {recipe.ingredients.map((ingredient, index) => (
