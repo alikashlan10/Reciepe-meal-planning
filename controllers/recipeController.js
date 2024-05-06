@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 // Post a new recipe
 const postRecipe = async (req, res) => {
     try {
-        const { title, ingredients, steps } = req.body;
-        const user = await UserModel.findById(req.user.id); // Assuming user ID is in the request
+        const { title, ingredients, steps,userId } = req.body;
+        const user = await UserModel.findById(userId); // Assuming user ID is in the request
 
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
@@ -14,7 +14,7 @@ const postRecipe = async (req, res) => {
 
         const newRecipe = new RecipeModel({
             title,
-            user: req.user.id,
+            user: userId,
             ingredients,
             steps
         });

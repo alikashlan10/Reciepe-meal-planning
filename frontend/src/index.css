@@ -31,6 +31,7 @@ header a {
   padding: 20px;
   margin: 0 auto;
 }
+/* navbar */
 
 nav {
   display: flex;
@@ -49,3 +50,43 @@ nav button {
   cursor: pointer;
   font-size: 1em;
 }
+
+/* RecipeDetails.css */
+
+/* RecipeDetails.css */
+
+/* RecipeDetails.css */
+
+.recipe-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 20px; /* Adjust the gap between recipes */
+}
+
+.recipe {
+  padding: 10px;
+  border: 1px solid #ff3333; /* Red border */
+  background-color: #f8f8f8; /* Off-white background */
+  border-radius: 10px; /* Round the corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a slight shadow for depth */
+}
+
+.recipe h2 {
+  margin-top: 0;
+  color: #ff3333; /* Red title color */
+}
+
+.recipe p {
+  margin-bottom: 5px;
+}
+
+.recipe ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.recipe ul li {
+  margin-bottom: 5px;
+}
+
+
