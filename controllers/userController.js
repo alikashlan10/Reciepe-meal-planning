@@ -106,7 +106,7 @@ const userLogin = async (req, res) => {
         }
 
         // Assuming the JWT_SECRET is defined in your environment
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '3h' });
 
         res.status(200).json({ message: 'User logged in.', token });
     } catch (err) {

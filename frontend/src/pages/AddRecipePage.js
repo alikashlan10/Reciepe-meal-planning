@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { jwtDecode } from 'jwt-decode';  // Ensure this import matches the correct package structure
+
+// Utility function to decode JWT and extract userId
+function getUserIdFromToken(token) {
+    if (!token) {
+        console.log("No token found");
+        return null;
+    }
+    try {
+        const decoded = jwtDecode(token);
+        return decoded.userId;
+    } catch (error) {
+        console.error("Failed to decode token:", error);
+        return null;
+    }
+}
 
 function AddRecipePage() {
     const [title, setTitle] = useState('');
     const [ingredients, setIngredients] = useState(['']);
     const [steps, setSteps] = useState(['']);
-    const {user} = useAuthContext()
+    const { user } = useAuthContext();  // Assuming 'user' object includes 'token'
+    
+    // Decode token to get userId
+    const userId = user ? getUserIdFromToken(user.token) : null;
 
+    // Handlers for form fields
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
     };
@@ -31,15 +51,22 @@ function AddRecipePage() {
         setSteps([...steps, '']);
     };
 
+    // Form submission handler
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!userId) {
+            alert("You must be logged in to add a recipe.");
+            return;
+        }
+
         const recipeData = {
             title,
             ingredients,
             steps,
-            // Assume user ID and other fields are managed server-side or through context
+            userId  // include userId in the recipe data
         };
-        
+
         try {
             const response = await fetch('http://localhost:4000/api/recipes', {
                 method: 'POST',
@@ -49,10 +76,11 @@ function AddRecipePage() {
                 },
                 body: JSON.stringify(recipeData),
             });
-            if (response.status==404) {
-                
+
+            if (!response.ok) {
                 throw new Error('Failed to add recipe');
             }
+
             alert('Recipe added successfully!');
             setTitle('');
             setIngredients(['']);
