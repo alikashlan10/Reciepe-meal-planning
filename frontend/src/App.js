@@ -5,6 +5,7 @@ import LoginPage from './pages/login';
 import Navbar from './components/NavBar';
 import Home from './pages/Home';
 import AddRecipePage from './pages/AddRecipePage';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
@@ -29,6 +30,11 @@ function App() {
             path='/form'
             element={<AddRecipePage/>}
             />
+            <Route
+            path='/profile/:username'
+            element={<UserProfile/>}
+            />
+
           </Routes>
 
           

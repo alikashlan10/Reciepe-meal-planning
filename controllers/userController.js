@@ -36,23 +36,23 @@ const getAllUsers = async (req, res) => {
 };
 
 // Get a specific user
-const getUser = async (req,res)=>{
-
-    
-    const {username} = req.params
-    try{
-        //search for user
-        const user = await userModel.findOne({username})
-        //if user not found
-        if(!user){
-            throw Error('user not found')
-        }
-        //response
-        res.status(200).json(user)
-    }catch(err){
-        res.status(400).json({error:err.message})
+const getUserProfile = async (req, res) => {
+    try {
+      // Find the user by username or any other unique identifier
+      const { username } = req.params;
+      const user = await userModel.findOne({ username }).populate('postedRecipes');
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // If user is found, return the user profile along with their posted recipes
+      res.json({ user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
     }
-}
+};
 
 
 // Update a user's details
@@ -114,16 +114,16 @@ const userLogin = async (req, res) => {
     }
 };
 const followUser = async (req, res) => {
-    const { followId } = req.params; // ID of the user to follow
-    const userId = req.userId; // ID of the user making the request
+    const { followId,userId } = req.body; // ID of the user to follow
+     // ID of the user making the request
 
     try {
         if (followId === userId) {
             return res.status(400).json({ error: "Users can't follow themselves." });
         }
 
-        const user = await UserModel.findById(userId);
-        const userToFollow = await UserModel.findById(followId);
+        const user = await userModel.findById(userId);
+        const userToFollow = await userModel.findById(followId);
 
         if (!userToFollow) {
             return res.status(404).json({ error: 'User to follow not found.' });
@@ -179,7 +179,7 @@ const unfollowUser = async (req, res) => {
 module.exports = {
     userRegister, // Existing function
     getAllUsers,  // Existing function
-    getUser,      // Existing function
+    getUserProfile,      // Existing function
     updateUser,
     deleteUser,
     userLogin,
