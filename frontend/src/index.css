@@ -189,7 +189,51 @@ button:hover {
   margin-top: 20px;
 }
 
-/* Additional styling can be added as needed */
+/* followers list*/
+.followers-container {
+  margin-top: 20px;
+}
+
+.followers-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.follower-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.follower-item:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+.followings-container {
+  margin-top: 20px;
+}
+
+.followings-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.following-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.following-item:hover {
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+
 
 
 

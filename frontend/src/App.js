@@ -6,6 +6,8 @@ import Navbar from './components/NavBar';
 import Home from './pages/Home';
 import AddRecipePage from './pages/AddRecipePage';
 import UserProfile from './pages/UserProfile';
+import FollowersPage from './pages/FollowersPage';
+import FollowingsPage from './pages/FollowingsPage';
 
 function App() {
   return (
@@ -33,6 +35,14 @@ function App() {
             <Route
             path='/profile/:username'
             element={<UserProfile/>}
+            />
+            <Route
+            path='/profile/:username/followers'
+            element={<FollowersPage/>}
+            />
+            <Route
+            path='/profile/:username/followings'
+            element={<FollowingsPage/>}
             />
 
           </Routes>

@@ -40,7 +40,7 @@ const getUserProfile = async (req, res) => {
     try {
       // Find the user by username or any other unique identifier
       const { username } = req.params;
-      const user = await userModel.findOne({ username }).populate('postedRecipes');
+      const user = await userModel.findOne({ username }).populate('postedRecipes').populate('followers').populate('following');
   
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
