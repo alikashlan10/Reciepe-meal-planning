@@ -62,7 +62,7 @@ nav button {
 .recipe {
   padding: 10px;
   border: 1px solid #ff3333; /* Red border */
-  background-color: #f8f8f8; /* Off-white background */
+  background-color:#fff; /* Off-white background */
   border-radius: 10px; /* Round the corners */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a slight shadow for depth */
 }
@@ -235,6 +235,19 @@ button:hover {
 
 
 
+.stepsButton {
+  color: firebrick;
+}
 
+.author{
+  
+  color: firebrick;
+}
 
+.authorTile{
+  background-color:#f1f1f1
+}
 
+.ingredients{
+  background-color:#f1f1f1;
+}
