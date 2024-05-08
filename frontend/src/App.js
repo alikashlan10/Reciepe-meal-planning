@@ -8,6 +8,8 @@ import AddRecipePage from './pages/AddRecipePage';
 import UserProfile from './pages/UserProfile';
 import FollowersPage from './pages/FollowersPage';
 import FollowingsPage from './pages/FollowingsPage';
+import SearchPage from './pages/SearchPage';
+import WelcomePage from './pages/WelcomePage';
 
 function App() {
   return (
@@ -43,6 +45,14 @@ function App() {
             <Route
             path='/profile/:username/followings'
             element={<FollowingsPage/>}
+            />
+            <Route
+            path='/search/:query'
+            element={<SearchPage/>}
+            />
+             <Route
+            path='/Welcome'
+            element={<WelcomePage/>}
             />
 
           </Routes>

@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import ProfileRecipes from "../components/UserRecipes";
 import FollowersPage from "./FollowersPage";
 import FollowingsPage from "./FollowingsPage";
+import RecipeDetails from "../components/RecipeDetails";
 
 const UserProfile = () => {
     const [userInfo, setUserInfo] = useState(null);

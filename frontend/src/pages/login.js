@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {login,error,isLoading} = useLogin()
+
+    const navigate = useNavigate();
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -16,8 +19,8 @@ function LoginPage() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         await login(email,password)
+        navigate(`/home`);
 
     };
 

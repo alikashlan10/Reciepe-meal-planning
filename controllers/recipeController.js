@@ -43,7 +43,7 @@ const getAllRecipes = async (req, res) => {
 
 // Search for recipes
 const searchRecipes = async (req, res) => {
-    const { query } = req.query;
+    const { query } = req.params;
     try {
         const recipes = await RecipeModel.find({
             title: { $regex: query, $options: 'i' } // Case-insensitive search

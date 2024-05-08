@@ -26,7 +26,7 @@ router.get('/', getAllRecipes);
 router.get('/:id', getRecipeById);
 
 // Search for recipes
-router.get('/search', searchRecipes);
+router.get('/search/:query', searchRecipes);
 
 // Update a recipe
 router.put('/:id', updateRecipe);

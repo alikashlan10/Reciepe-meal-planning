@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useSignup } from '../hooks/useSignup';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = ()=> {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {signup,isLoading,error}= useSignup();
+    const navigate = useNavigate();
 
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -21,10 +23,8 @@ const RegisterPage = ()=> {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        //setError('');
-        //setMessage('');
-
         await signup(username,email,password)
+        navigate(`/home`);
 
     };
 
