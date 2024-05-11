@@ -1,5 +1,6 @@
 const RecipeModel = require('../dataModels/recipeModel');
 const UserModel = require('../dataModels/userModel');
+const ReviewModel = require('../dataModels/reviewModel');
 const mongoose = require('mongoose');
 
 // Post a new recipe
@@ -34,7 +35,7 @@ const postRecipe = async (req, res) => {
 // Get all recipes
 const getAllRecipes = async (req, res) => {
     try {
-        const recipes = await RecipeModel.find().populate('user', 'username');
+        const recipes = await RecipeModel.find().populate('user', 'username').populate('reviews','comment');
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -47,7 +48,7 @@ const searchRecipes = async (req, res) => {
     try {
         const recipes = await RecipeModel.find({
             title: { $regex: query, $options: 'i' } // Case-insensitive search
-        }).populate('user', 'username');
+        }).populate('user', 'username').populate('reviews');
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -58,7 +59,7 @@ const searchRecipes = async (req, res) => {
 // Get a specific recipe by ID
 const getRecipeById = async (req, res) => {
     try {
-        const recipe = await RecipeModel.findById(req.params.id).populate('user', 'username');
+        const recipe = await RecipeModel.findById(req.params.id).populate('user', 'username').populate('reviews');
         if (!recipe) {
             return res.status(404).json({ error: 'Recipe not found.' });
         }

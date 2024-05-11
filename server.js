@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors'); // Include the cors library
 const userRoutes = require('./routes/user');
 const recipeRoutes = require('./routes/recipe');
+const reviewRoutes = require('./routes/review');
 
 // express app
 const app = express();
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/recipes', recipeRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // connect to db
 mongoose.connect(process.env.MongoURI)

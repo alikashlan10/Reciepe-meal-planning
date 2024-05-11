@@ -6,7 +6,10 @@ const recipeSchema = new mongoose.Schema({
     steps: [String],
     comments: [{ body: String, date: Date }],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    
+    reviews: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'reviews'
+    }],
   });
   
   module.exports = mongoose.model('Recipe', recipeSchema);

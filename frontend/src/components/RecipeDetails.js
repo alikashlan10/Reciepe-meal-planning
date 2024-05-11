@@ -85,6 +85,7 @@ const RecipeDetails = ({ recipe }) => {
         ))}
       </ul>
       <h3 className="stepsButton"  onClick={openRecipeWindow} style={{ cursor: "pointer" }}>Steps</h3>
+      <h3 className="stepsButton"  onClick={openRecipeWindow} style={{ cursor: "pointer" }}>Reviews</h3>
     </div>
   );
 };
