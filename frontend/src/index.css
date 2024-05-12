@@ -256,3 +256,22 @@ button:hover {
 .welcomeText{
   color: #ff3333;
 }
+
+.addReviewTitle{
+  background-color:#f1f1f1;
+}
+
+.row {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 5px;
+}
+
+label {
+  margin-right: 10px; /* Add spacing between label and select */
+}
+
+.reviewInput{
+  margin-bottom: 10px;
+}
+

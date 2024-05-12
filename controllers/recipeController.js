@@ -35,7 +35,10 @@ const postRecipe = async (req, res) => {
 // Get all recipes
 const getAllRecipes = async (req, res) => {
     try {
-        const recipes = await RecipeModel.find().populate('user', 'username').populate('reviews','comment');
+        const recipes = await RecipeModel.find().populate('user', 'username').populate({
+            path: 'reviews',
+            populate: { path: 'user', select: 'username' } // Populate user field of reviews with username
+        });
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ error: error.message });
