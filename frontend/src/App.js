@@ -10,6 +10,7 @@ import FollowersPage from './pages/FollowersPage';
 import FollowingsPage from './pages/FollowingsPage';
 import SearchPage from './pages/SearchPage';
 import WelcomePage from './pages/WelcomePage';
+import MyProfile from './pages/MyProfile';
 
 function App() {
   return (
@@ -53,6 +54,10 @@ function App() {
              <Route
             path='/Welcome'
             element={<WelcomePage/>}
+            />
+            <Route
+            path='/profile/me'
+            element={<MyProfile/>}
             />
 
           </Routes>

@@ -39,6 +39,7 @@ const Navbar = () => {
               <button onClick={handleClick}>Log out</button>
               <Link to='/home'>Home</Link>
               <Link to='/form'>Add recipe</Link>
+              <Link to='/profile/me'>My profile</Link>
               
             </div>
           )}

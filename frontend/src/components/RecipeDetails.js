@@ -197,7 +197,7 @@ const openReviewsWindow = () => {
               `<li key=${index}>
                 <h2>Rating: ${review.rating}</h2>
                 <p>Comment: ${review.comment}</p>
-                <p>User: ${review.user.username}</p>
+                <p>Author: ${review.user.username}</p>
               </li>`
             )).join('')}
           </ul>
